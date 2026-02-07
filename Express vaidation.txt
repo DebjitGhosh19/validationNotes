@@ -1,4 +1,4 @@
-const { body, validationResult } = require('express-validator');
+import { body, validationResult } from "express-validator";
 
 // Validation rules middleware
 const validateSignup = [
@@ -24,13 +24,14 @@ const validateSignup = [
   }),
 
   // Middleware function to catch and send errors
-  (req, res, next) => {
+ (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      const errorMessages = errors.array().map((err) => err.msg);
+      return res.status(400).json({ errors: errorMessages });
     }
-    next(); // Pass control to the final route handler
-  }
+    next();
+  },
 ];
 
 
@@ -47,3 +48,4 @@ router.post('/signup', validateSignup, (req, res) => {
 
 
 // if error use check
+
